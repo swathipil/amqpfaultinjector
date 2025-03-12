@@ -1,0 +1,91 @@
+package main
+
+import (
+	"context"
+	"time"
+
+	"github.com/Azure/amqpfaultinjector/internal/faultinjectors"
+	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
+	"github.com/spf13/cobra"
+)
+
+func newDetachAfterDelayCommand(ctx context.Context) *cobra.Command {
+	var detachAfter *time.Duration
+	var detachErrorCond *string
+	var detachErrorDesc *string
+
+	cmd := &cobra.Command{
+		Use:   "detach_after_delay",
+		Short: "Detaches links after a specified delay with a specified error. Useful for exercising recovery code.",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			injector := faultinjectors.NewDetachAfterDelayInjector(*detachAfter, &encoding.Error{
+				Condition:   encoding.ErrCond(*detachErrorCond),
+				Description: *detachErrorDesc,
+			})
+
+			return runInjectorCommand(ctx, cmd, injector.Callback)
+		},
+	}
+
+	detachAfter = cmd.Flags().Duration("delay", 2*time.Second, "Amount of time to wait, after ATTACH, before initiating DETACH")
+	detachErrorCond = cmd.Flags().String("cond", "amqp:link:detach-forced", "AMQP error condition to use for the returned error from DETACH")
+	detachErrorDesc = cmd.Flags().String("desc", "Detached by the fault injector", "AMQP error description to use for the returned error from DETACH")
+
+	return cmd
+}
+
+func newDetachAfterTransferCommand(ctx context.Context) *cobra.Command {
+	var times *int
+	var detachErrorCond *string
+	var detachErrorDesc *string
+
+	cmd := &cobra.Command{
+		Use:   "detach_after_transfer",
+		Short: "Detaches AMQP senders after a specified number of TRANSFER frames.",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			injector := faultinjectors.NewDetachAfterTransferInjector(*times, encoding.Error{
+				Condition:   encoding.ErrCond(*detachErrorCond),
+				Description: *detachErrorDesc,
+			})
+			return runInjectorCommand(ctx, cmd, injector.Callback)
+		},
+	}
+
+	times = cmd.Flags().Int("times", 1, "Number of times to DETACH after TRANSFER frames")
+	detachErrorCond = cmd.Flags().String("cond", "amqp:link:detach-forced", "AMQP error condition to use for the returned error from DETACH")
+	detachErrorDesc = cmd.Flags().String("desc", "Detached by the fault injector", "AMQP error description to use for the returned error from DETACH")
+
+	return cmd
+}
+
+func newSlowTransferFrames(ctx context.Context) *cobra.Command {
+	var delay *time.Duration
+
+	cmd := &cobra.Command{
+		Use:   "transfer_delay",
+		Short: "Slows down TRANSFER frames",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			injector := faultinjectors.NewSlowTransfersInjector(*delay)
+			return runInjectorCommand(ctx, cmd, injector.Callback)
+		},
+	}
+
+	delay = cmd.Flags().Duration("delay", 10*time.Second, "Amount of delay to introduce before each TRANSFER frame")
+	return cmd
+}
+
+// newPassthroughCommand creates a command that passes all frames through, unchanged. Useful if trying to troubleshoot.
+func newPassthroughCommand(ctx context.Context) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "passthrough",
+		Short: "Runs the fault injector but passes all frames through. Useful for troubleshooting.",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runInjectorCommand(ctx, cmd, func(ctx context.Context, params faultinjectors.MirrorCallbackParams) ([]faultinjectors.MetaFrame, error) {
+				return []faultinjectors.MetaFrame{{
+					Action: faultinjectors.MetaFrameActionPassthrough, Frame: params.Frame,
+				}}, nil
+			})
+		},
+	}
+	return cmd
+}

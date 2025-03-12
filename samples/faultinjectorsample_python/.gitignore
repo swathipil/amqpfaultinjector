@@ -1,0 +1,6 @@
+# common venv folders
+my-venv
+.venv
+
+pyvenv.cfg
+

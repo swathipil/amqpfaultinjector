@@ -1,0 +1,15 @@
+{
+  "name": "faultinjectorsample_js",
+  "version": "1.0.0",
+  "description": "JavaScript setup and samples for common scenarios.",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "dependencies": {
+    "@azure/identity": "^4.6.0",
+    "@azure/service-bus": "^7.9.5",
+    "dotenv": "^16.4.7"
+  }
+}

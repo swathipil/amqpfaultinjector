@@ -1,0 +1,9 @@
+# TODO: temporarily installing directly from the repo until the package is published. We need the fix in main so we can
+# force plain TCP connections, instead of websocket, when using a custom endpoint.
+# azure-servicebus
+git+https://github.com/Azure/azure-sdk-for-python.git@main#subdirectory=sdk/servicebus/azure-servicebus&egg=azure-servicebus
+git+https://github.com/Azure/azure-sdk-for-python.git@main#subdirectory=sdk/eventhub/azure-eventhub&egg=azure-eventhub
+azure-identity
+python-dotenv
+websocket-client
+aiohttp
