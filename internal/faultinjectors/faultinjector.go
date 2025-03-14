@@ -8,7 +8,6 @@ import (
 	"log/slog"
 	"net"
 	"os"
-	"path"
 	"strings"
 	"sync/atomic"
 
@@ -16,79 +15,7 @@ import (
 	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
 	"github.com/Azure/amqpfaultinjector/internal/utils"
 	"github.com/madflojo/testcerts"
-	"github.com/spf13/cobra"
 )
-
-const hostFlagName = "host"
-const addressFileFlagName = "address-file"
-const logsFlagName = "logs"
-
-func NewRootCommand() *cobra.Command {
-	rootCmd := &cobra.Command{
-		Use: "faultinjector",
-	}
-
-	rootCmd.PersistentFlags().String(hostFlagName, "", "The hostname of the service we're proxying to (ex: <server>.servicebus.windows.net")
-	rootCmd.PersistentFlags().String(logsFlagName, ".", "The directory to write any logs or trace files")
-	rootCmd.PersistentFlags().String(addressFileFlagName, "", "File to write the address the fault injector is listening on. If enabled, the fault injector will start on a random port, instead of 5671.")
-	_ = rootCmd.MarkPersistentFlagRequired(hostFlagName)
-
-	return rootCmd
-}
-
-func Run(ctx context.Context, cmd *cobra.Command, injector MirrorCallback) error {
-	hostname, err := cmd.Flags().GetString(hostFlagName)
-
-	if err != nil {
-		return err
-	}
-
-	addressFile, err := cmd.Flags().GetString(addressFileFlagName)
-
-	if err != nil {
-		return err
-	}
-
-	logsDir, err := cmd.Flags().GetString(logsFlagName)
-
-	if err != nil {
-		return err
-	}
-
-	port := 5671
-
-	if addressFile != "" {
-		slog.Info("Fault injector will start up on the next free port")
-		port = 0
-	}
-
-	fi, err := NewFaultInjector(
-		fmt.Sprintf("localhost:%d", port),
-		hostname,
-		injector,
-		&FaultInjectorOptions{
-			JSONLFile:     path.Join(logsDir, "faultinjector-traffic.json"),
-			TLSKeyLogFile: path.Join(logsDir, "faultinjector-tlskeys.txt"),
-			AddressFile:   addressFile,
-		})
-
-	if err != nil {
-		return err
-	}
-
-	go func() {
-		<-ctx.Done()
-
-		slogger := logging.SloggerFromContext(ctx)
-
-		slogger.Info("Cancellation received, closing fault injector")
-		if err := fi.Close(); err != nil {
-			slogger.Error("failed when closing the fault injector", "error", err)
-		}
-	}()
-
-	return fi.ListenAndServe()
-}
 
 // TODO: some more factoring to make the AMQPProxy and FaultInjector share a bit more code would be good.
 type FaultInjector struct {

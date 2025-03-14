@@ -2,12 +2,78 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"log/slog"
+	"path"
 	"time"
 
+	"github.com/Azure/amqpfaultinjector/cmd/internal"
 	"github.com/Azure/amqpfaultinjector/internal/faultinjectors"
+	"github.com/Azure/amqpfaultinjector/internal/logging"
 	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
 	"github.com/spf13/cobra"
 )
+
+const addressFileFlagName = "address-file"
+
+func newRootCommand() *cobra.Command {
+	rootCmd := &cobra.Command{
+		Use: "faultinjector",
+	}
+
+	rootCmd.PersistentFlags().String(addressFileFlagName, "", "File to write the address the faultinjector is listening on. If enabled, the faultinjector will start on a random port, instead of 5671.")
+
+	internal.AddCommonFlags(rootCmd)
+	return rootCmd
+}
+
+func runCommand(ctx context.Context, cmd *cobra.Command, injector faultinjectors.MirrorCallback) error {
+	port := 5671
+
+	addressFile, err := cmd.Flags().GetString(addressFileFlagName)
+
+	if err != nil {
+		return err
+	}
+
+	if addressFile != "" {
+		slog.Info("Fault injector will start up on the next free port")
+		port = 0
+	}
+
+	cf, err := internal.ExtractCommonFlags(cmd)
+
+	if err != nil {
+		return err
+	}
+
+	fi, err := faultinjectors.NewFaultInjector(
+		fmt.Sprintf("localhost:%d", port),
+		cf.Host,
+		injector,
+		&faultinjectors.FaultInjectorOptions{
+			JSONLFile:     path.Join(cf.LogsDir, "faultinjector-traffic.json"),
+			TLSKeyLogFile: path.Join(cf.LogsDir, "faultinjector-tlskeys.txt"),
+			AddressFile:   addressFile,
+		})
+
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		<-ctx.Done()
+
+		slogger := logging.SloggerFromContext(ctx)
+
+		slogger.Info("Cancellation received, closing fault injector")
+		if err := fi.Close(); err != nil {
+			slogger.Error("failed when closing the fault injector", "error", err)
+		}
+	}()
+
+	return fi.ListenAndServe()
+}
 
 func newDetachAfterDelayCommand(ctx context.Context) *cobra.Command {
 	var detachAfter *time.Duration
@@ -23,7 +89,7 @@ func newDetachAfterDelayCommand(ctx context.Context) *cobra.Command {
 				Description: *detachErrorDesc,
 			})
 
-			return runInjectorCommand(ctx, cmd, injector.Callback)
+			return runCommand(ctx, cmd, injector.Callback)
 		},
 	}
 
@@ -47,7 +113,7 @@ func newDetachAfterTransferCommand(ctx context.Context) *cobra.Command {
 				Condition:   encoding.ErrCond(*detachErrorCond),
 				Description: *detachErrorDesc,
 			})
-			return runInjectorCommand(ctx, cmd, injector.Callback)
+			return runCommand(ctx, cmd, injector.Callback)
 		},
 	}
 
@@ -66,7 +132,7 @@ func newSlowTransferFrames(ctx context.Context) *cobra.Command {
 		Short: "Slows down TRANSFER frames",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			injector := faultinjectors.NewSlowTransfersInjector(*delay)
-			return runInjectorCommand(ctx, cmd, injector.Callback)
+			return runCommand(ctx, cmd, injector.Callback)
 		},
 	}
 
@@ -80,12 +146,13 @@ func newPassthroughCommand(ctx context.Context) *cobra.Command {
 		Use:   "passthrough",
 		Short: "Runs the fault injector but passes all frames through. Useful for troubleshooting.",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runInjectorCommand(ctx, cmd, func(ctx context.Context, params faultinjectors.MirrorCallbackParams) ([]faultinjectors.MetaFrame, error) {
+			return runCommand(ctx, cmd, func(ctx context.Context, params faultinjectors.MirrorCallbackParams) ([]faultinjectors.MetaFrame, error) {
 				return []faultinjectors.MetaFrame{{
 					Action: faultinjectors.MetaFrameActionPassthrough, Frame: params.Frame,
 				}}, nil
 			})
 		},
 	}
+
 	return cmd
 }

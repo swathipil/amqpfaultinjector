@@ -1,0 +1,58 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Go
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Build windows/amd64
+        run: go build -o amqpproxy_win_amd64.exe -v ./cmd/amqpproxy
+        env:
+          GOOS: windows
+          GOARCH: amd64
+
+      - name: Build mac/arm64
+        run: go build -o amqpproxy_darwin_arm64 -v ./cmd/amqpproxy
+        env:
+          GOOS: darwin
+          GOARCH: arm64
+
+      - name: Build linux/amd64 (amqpproxy)
+        run: go build -o amqpproxy_linux_amd64 -v ./cmd/amqpproxy
+        env:
+          GOOS: linux
+          GOARCH: amd64
+
+      - name: Build linux/amd64 (faultinjector)
+        run: go build -o amqpproxy_linux_amd64 -v ./cmd/faultinjector
+        env:
+          GOOS: linux
+          GOARCH: amd64
+
+      # I regret eating up my entire binary quota by doing this.
+      # - name: Upload amqpproxies...
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: amqpproxies_all
+      #     path: |
+      #       ./amqpproxy_win_amd64.exe
+      #       ./amqpproxy_darwin_arm64
+      #       ./amqpproxy_linux_amd64
+
+#    - name: Test
+#      run: go test -v ./...

@@ -1,0 +1,8 @@
+# Git Hub integration and bot rules
+/.github/                @richardpark-msft @swathipil
+
+# All the rest..
+/                        @richardpark-msft @swathipil
+
+# Catch all for non-code project files and unowned files | folders
+*                        @richardpark-msft @swathipil

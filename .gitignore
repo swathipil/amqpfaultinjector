@@ -1,0 +1,26 @@
+amqpfaultinjector.test
+faultinjector.txt
+timed_detaches.json
+/fuzz/*/*
+!/fuzz/*/corpus
+/fuzz/*.zip
+*.log
+/cmd/*/*.json
+cover.out
+.envrc
+recordings
+.vscode
+.idea
+*.env
+*.jsonl
+*.bin
+**/node_modules/
+samples/faultinjectorsample_js/package-lock.json
+
+# ignoring the keys/logs files so they don't get checked in.
+*-traffic-*.json
+*-bin-*.txt
+*-tlskeys.txt
+
+# temp folder when we're creating a release
+_bin
