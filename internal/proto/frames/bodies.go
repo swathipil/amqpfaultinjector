@@ -365,6 +365,16 @@ func (e *EmptyFrame) Marshal(wr *buffer.Buffer) error {
 	return nil
 }
 
+type RawFrame struct{}
+
+func (r *RawFrame) frameBody()         {}
+func (r *RawFrame) Type() BodyType     { return BodyTypeRawFrame }
+func (r *RawFrame) GetHandle() *uint32 { return nil }
+
+func (r *RawFrame) Marshal(wr *buffer.Buffer) error {
+	return nil
+}
+
 /*
 <type name="open" class="composite" source="list" provides="frame">
     <descriptor name="amqp:open:list" code="0x00000000:0x00000010"/>

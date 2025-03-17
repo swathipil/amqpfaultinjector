@@ -111,7 +111,7 @@ func (l *JSONLogger) flush(out bool) error {
 				Time:      time.Now(),
 				Direction: direction,
 				Frame:     frame,
-				FrameType: frame.BodyType,
+				FrameType: frame.Body.Type(),
 			}
 
 			if l.sm != nil {

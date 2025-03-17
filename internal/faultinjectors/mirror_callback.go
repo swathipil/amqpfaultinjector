@@ -44,7 +44,7 @@ func (mcp MirrorCallbackParams) Channel() uint16 {
 
 // Type is the BodyType of the underlying frame.
 func (mcp MirrorCallbackParams) Type() frames.BodyType {
-	return mcp.Frame.BodyType
+	return mcp.Frame.Body.Type()
 }
 
 // Address is the address from the ATTACH frame that corresponds to

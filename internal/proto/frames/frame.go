@@ -26,16 +26,22 @@ type PreambleOrFrame interface {
 type BodyType string
 
 const (
-	BodyTypeEmptyFrame     = "EmptyFrame"
-	BodyTypeAttach         = "Attach"
-	BodyTypeBegin          = "Begin"
-	BodyTypeClose          = "Close"
-	BodyTypeDetach         = "Detach"
-	BodyTypeDisposition    = "Disposition"
-	BodyTypeEnd            = "End"
-	BodyTypeFlow           = "Flow"
-	BodyTypeOpen           = "Open"
-	BodyTypeTransfer       = "Transfer"
+	// Pseudo-frames, tracking "special" types
+	BodyTypeEmptyFrame = "Empty" // a frame without a body. This is commonly used for AMQP keep-alives.
+	BodyTypeRawFrame   = "Raw"   // a frame that was fabricated. This is primarily useful when attempting to go outside of the AMQP, with full control over the encoded frame.
+
+	// AMQP frame types
+	BodyTypeAttach      = "Attach"
+	BodyTypeBegin       = "Begin"
+	BodyTypeClose       = "Close"
+	BodyTypeDetach      = "Detach"
+	BodyTypeDisposition = "Disposition"
+	BodyTypeEnd         = "End"
+	BodyTypeFlow        = "Flow"
+	BodyTypeOpen        = "Open"
+	BodyTypeTransfer    = "Transfer"
+
+	// SASL frames
 	BodyTypeSASLChallenge  = "SASLChallenge"
 	BodyTypeSASLInit       = "SASLInit"
 	BodyTypeSASLMechanisms = "SASLMechanisms"
@@ -44,8 +50,6 @@ const (
 )
 
 type Frame struct {
-	BodyType BodyType `json:"-"`
-
 	// Header is an AMQP frame header. This will be followed with a [ParsedItem] with a [Body].
 	Header Header
 
@@ -57,16 +61,47 @@ type Frame struct {
 	raw []byte
 }
 
-// UnmarshalJSON just makes it simpler to deserialize as a specific type.
-func UnmarshalJSONBody[BodyT Body](body []byte, dest *Body) error {
-	var t *BodyT
+// jsonFrame is the object we use to actually read/write the JSON representation
+// of [Frame].
+type jsonFrame struct {
+	// should always match the exported fields in [Frame]
+	Header Header
+	Body   json.RawMessage
 
-	if err := json.Unmarshal(body, &t); err != nil {
-		return err
+	// these fields are used only in the JSON serde
+	BodyType BodyType
+
+	// This only gets used when the user is off-roading and doing their
+	// own encoding/decoding.
+	Raw []byte `json:",omitempty"`
+}
+
+func NewRawFrame(rawFrame []byte) *Frame {
+	return &Frame{raw: rawFrame, Body: &RawFrame{}}
+}
+
+func (fr *Frame) MarshalJSON() ([]byte, error) {
+	var jf = jsonFrame{
+		Header: fr.Header, BodyType: fr.Body.Type(),
 	}
 
-	*dest = *t
-	return nil
+	bodyJSON, err := json.Marshal(fr.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	jf.Body = bodyJSON
+
+	// raw body type is used when you specifically are trying to go a bit off-road, and encode
+	// a frame, arbitrarily. You might be attempting to break AMQP (by sending invalid data) or
+	// encoding things in constraint violating ways. This means we don't want to attempt to parse
+	// the payload, so we'll encode it as a raw set of bytes instead.
+	if fr.Body.Type() == BodyTypeRawFrame {
+		jf.Raw = fr.raw
+	}
+
+	return json.Marshal(jf)
 }
 
 func (fr *Frame) UnmarshalJSON(data []byte) error {
@@ -86,64 +121,64 @@ func (fr *Frame) UnmarshalJSON(data []byte) error {
 	}
 
 	switch tmpFrame.BodyType {
-	case BodyTypeEmptyFrame:
-		if err := UnmarshalJSONBody[*EmptyFrame](tmpFrame.Body, &fr.Body); err != nil {
+	case BodyTypeEmptyFrame, BodyTypeRawFrame:
+		if err := unmarshalJSONBody[*EmptyFrame](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeAttach:
-		if err := UnmarshalJSONBody[*PerformAttach](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*PerformAttach](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeBegin:
-		if err := UnmarshalJSONBody[*PerformBegin](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*PerformBegin](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeClose:
-		if err := UnmarshalJSONBody[*PerformClose](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*PerformClose](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeDetach:
-		if err := UnmarshalJSONBody[*PerformDetach](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*PerformDetach](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeDisposition:
-		if err := UnmarshalJSONBody[*PerformDisposition](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*PerformDisposition](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeEnd:
-		if err := UnmarshalJSONBody[*PerformEnd](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*PerformEnd](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeFlow:
-		if err := UnmarshalJSONBody[*PerformFlow](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*PerformFlow](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeOpen:
-		if err := UnmarshalJSONBody[*PerformOpen](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*PerformOpen](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeTransfer:
-		if err := UnmarshalJSONBody[*PerformTransfer](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*PerformTransfer](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeSASLChallenge:
-		if err := UnmarshalJSONBody[*SASLChallenge](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*SASLChallenge](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeSASLInit:
-		if err := UnmarshalJSONBody[*SASLInit](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*SASLInit](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeSASLMechanisms:
-		if err := UnmarshalJSONBody[*SASLMechanisms](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*SASLMechanisms](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeSASLOutcome:
-		if err := UnmarshalJSONBody[*SASLOutcome](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*SASLOutcome](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	case BodyTypeSASLResponse:
-		if err := UnmarshalJSONBody[*SASLResponse](tmpFrame.Body, &fr.Body); err != nil {
+		if err := unmarshalJSONBody[*SASLResponse](tmpFrame.Body, &fr.Body); err != nil {
 			return err
 		}
 	default:
@@ -152,6 +187,18 @@ func (fr *Frame) UnmarshalJSON(data []byte) error {
 		// panic(fmt.Sprintf("unexpected frames.Body: %#v", tmpFrame.BodyType))
 	}
 
+	return nil
+}
+
+// UnmarshalJSON just makes it simpler to deserialize as a specific type.
+func unmarshalJSONBody[BodyT Body](body []byte, dest *Body) error {
+	var t *BodyT
+
+	if err := json.Unmarshal(body, &t); err != nil {
+		return err
+	}
+
+	*dest = *t
 	return nil
 }
 

@@ -65,10 +65,9 @@ func (fb *Buffer) Extract() (PreambleOrFrame, error) {
 		rawBuff = append(rawBuff, fb.buff[0:n]...)
 
 		amqpItem := &Frame{
-			Header:   *fb.currentHeader,
-			Body:     body,
-			BodyType: body.Type(),
-			raw:      rawBuff,
+			Header: *fb.currentHeader,
+			Body:   body,
+			raw:    rawBuff,
 		}
 
 		fb.buff = fb.buff[n:]

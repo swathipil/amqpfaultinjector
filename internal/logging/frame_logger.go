@@ -44,7 +44,7 @@ func (l *FrameLogger) AddFrame(out bool, fr *frames.Frame, metadata any) error {
 		Time:      time.Now(),
 		Direction: direction,
 		Frame:     fr,
-		FrameType: fr.BodyType,
+		FrameType: fr.Body.Type(),
 		Metadata:  metadata,
 	}
 

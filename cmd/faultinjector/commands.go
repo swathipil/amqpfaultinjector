@@ -27,7 +27,7 @@ func newRootCommand() *cobra.Command {
 	return rootCmd
 }
 
-func runCommand(ctx context.Context, cmd *cobra.Command, injector faultinjectors.MirrorCallback) error {
+func runFaultInjector(ctx context.Context, cmd *cobra.Command, injector faultinjectors.MirrorCallback) error {
 	port := 5671
 
 	addressFile, err := cmd.Flags().GetString(addressFileFlagName)
@@ -89,7 +89,7 @@ func newDetachAfterDelayCommand(ctx context.Context) *cobra.Command {
 				Description: *detachErrorDesc,
 			})
 
-			return runCommand(ctx, cmd, injector.Callback)
+			return runFaultInjector(ctx, cmd, injector.Callback)
 		},
 	}
 
@@ -113,7 +113,7 @@ func newDetachAfterTransferCommand(ctx context.Context) *cobra.Command {
 				Condition:   encoding.ErrCond(*detachErrorCond),
 				Description: *detachErrorDesc,
 			})
-			return runCommand(ctx, cmd, injector.Callback)
+			return runFaultInjector(ctx, cmd, injector.Callback)
 		},
 	}
 
@@ -132,7 +132,7 @@ func newSlowTransferFrames(ctx context.Context) *cobra.Command {
 		Short: "Slows down TRANSFER frames",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			injector := faultinjectors.NewSlowTransfersInjector(*delay)
-			return runCommand(ctx, cmd, injector.Callback)
+			return runFaultInjector(ctx, cmd, injector.Callback)
 		},
 	}
 
@@ -146,7 +146,7 @@ func newPassthroughCommand(ctx context.Context) *cobra.Command {
 		Use:   "passthrough",
 		Short: "Runs the fault injector but passes all frames through. Useful for troubleshooting.",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runCommand(ctx, cmd, func(ctx context.Context, params faultinjectors.MirrorCallbackParams) ([]faultinjectors.MetaFrame, error) {
+			return runFaultInjector(ctx, cmd, func(ctx context.Context, params faultinjectors.MirrorCallbackParams) ([]faultinjectors.MetaFrame, error) {
 				return []faultinjectors.MetaFrame{{
 					Action: faultinjectors.MetaFrameActionPassthrough, Frame: params.Frame,
 				}}, nil

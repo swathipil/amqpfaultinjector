@@ -21,7 +21,7 @@ func ValidateLog(t *testing.T, jsonlFile string) {
 	foundCBS := false
 
 	for _, line := range lines {
-		if line.EntityPath == "$cbs" && line.Direction == "out" && line.FrameType == "Transfer" {
+		if line.EntityPath == "$cbs" && line.Direction == "out" && line.BodyType == "Transfer" {
 			foundCBS = true
 
 			require.Equal(t, "put-token", line.MessageData.CBSData.ApplicationProperties["operation"])
@@ -33,7 +33,7 @@ func ValidateLog(t *testing.T, jsonlFile string) {
 			require.NotEmpty(t, line.Direction)
 		}
 
-		switch line.FrameType {
+		switch line.BodyType {
 		case frames.BodyTypeAttach:
 		case frames.BodyTypeDetach:
 		case frames.BodyTypeFlow:
@@ -57,6 +57,9 @@ func ValidateLog(t *testing.T, jsonlFile string) {
 			frames.BodyTypeEmptyFrame:
 			require.Empty(t, line.EntityPath)
 		}
+
+		require.NotEmpty(t, line.BodyType)
+		require.Empty(t, line.Raw, "Only filled out for RawFrames, not expected for this test")
 	}
 
 	require.True(t, foundCBS)
@@ -74,11 +77,13 @@ type logLine struct {
 
 	Body json.RawMessage
 
-	FrameType   frames.BodyType `json:",omitempty"`
+	BodyType    frames.BodyType `json:",omitempty"`
 	MessageData struct {
 		logging.JSONMessageData
 		Message json.RawMessage
 	}
+
+	Raw []byte // only shows up for frames that are created with [frames.NewRawFrame]
 }
 
 func MustReadJSON(t *testing.T, path string) []logLine {

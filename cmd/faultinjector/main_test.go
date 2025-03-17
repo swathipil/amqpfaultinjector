@@ -9,6 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Azure/amqpfaultinjector/internal/faultinjectors"
+	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
 	"github.com/Azure/amqpfaultinjector/internal/testhelpers"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/messaging/azservicebus"
@@ -172,6 +174,55 @@ func TestFaultInjector_SlowTransferFrames(t *testing.T) {
 	t.Logf("Receiving complete, closing fault injector")
 	testData.MustClose(t)
 	testhelpers.ValidateLog(t, testData.JSONLFile)
+}
+
+func TestFaultInjector_VerbatimPassthrough(t *testing.T) {
+	testData := mustCreateFaultInjector(t, func(ctx context.Context) *cobra.Command {
+		cmd := &cobra.Command{
+			Use: "verbatim_passthrough",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				return runFaultInjector(ctx, cmd, func(ctx context.Context, params faultinjectors.MirrorCallbackParams) ([]faultinjectors.MetaFrame, error) {
+
+					data, err := params.Frame.MarshalAMQP()
+
+					if err != nil {
+						return nil, err
+					}
+
+					// TODO: at this point we'd tinker with the bytes, or possibly just replace it wholesale
+					// with our own encoded message.
+					//
+					// For this example we'll just use the bytes, as is, but it demonstrates the concept.
+					rawFrame := frames.NewRawFrame(data)
+
+					return []faultinjectors.MetaFrame{{Action: faultinjectors.MetaFrameActionPassthrough, Frame: rawFrame}}, nil
+				})
+			},
+		}
+		return cmd
+	}, nil)
+
+	receiver, err := testData.ServiceBusClient.NewReceiverForQueue(testData.ServiceBusQueue, nil)
+	require.NoError(t, err)
+
+	peekedMessages, err := receiver.PeekMessages(context.Background(), 1, nil)
+	require.NoError(t, err)
+	require.NotEmpty(t, peekedMessages)
+
+	testData.MustClose(t)
+
+	// the log file here is going to end up being a bunch of raw (ie, byte level) payloads, without any parsing, because
+	// we passed everything as raw frames, above.
+	rawFrames := 0
+
+	for _, line := range testhelpers.MustReadJSON(t, testData.JSONLFile) {
+		if line.BodyType == frames.BodyTypeRawFrame {
+			require.NotEmpty(t, line.Raw)
+			rawFrames++
+		}
+	}
+
+	require.NotZero(t, rawFrames)
 }
 
 type testFaultInjector struct {

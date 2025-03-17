@@ -38,7 +38,7 @@ func (inj *SlowTransfersInjector) Callback(ctx context.Context, params MirrorCal
 	transferFrame, ok := params.Frame.Body.(*frames.PerformTransfer)
 
 	if !ok {
-		utils.Panicf("BodyType was %s, but the actual body type was %T", params.Frame.BodyType, params.Frame.Body)
+		utils.Panicf("BodyType was %s, but the actual body type was %T", params.Frame.Body.Type(), params.Frame.Body)
 	}
 
 	deliveryID := "<unspecified>"
