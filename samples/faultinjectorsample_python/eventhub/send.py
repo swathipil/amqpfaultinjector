@@ -12,6 +12,7 @@ Examples to show sending events with different options to an Event Hub partition
 import time
 import os
 import ssl
+from dotenv import find_dotenv, load_dotenv
 
 from azure.eventhub import EventHubProducerClient, EventData, TransportType
 from azure.eventhub.exceptions import EventHubError
@@ -24,6 +25,8 @@ handler.setFormatter(log_fmt)
 logger = logging.getLogger('azure.eventhub')
 logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)
+
+load_dotenv(find_dotenv())
 
 FULLY_QUALIFIED_NAMESPACE = os.environ["EVENT_HUB_HOSTNAME"]
 EVENTHUB_NAME = os.environ["EVENT_HUB_NAME"]
