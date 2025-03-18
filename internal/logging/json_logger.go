@@ -80,7 +80,8 @@ type JSONLine struct {
 	// Metadata are extra properties that can be added by logging implementations.
 	Metadata any `json:",omitempty"`
 
-	*frames.Frame
+	// Frame is the actual AMQP Frame object, including the Header and the Body.
+	Frame *frames.Frame
 
 	MessageData JSONMessageData `json:",omitempty"`
 }

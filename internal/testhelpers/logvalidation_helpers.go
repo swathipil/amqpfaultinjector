@@ -21,19 +21,19 @@ func ValidateLog(t *testing.T, jsonlFile string) {
 	foundCBS := false
 
 	for _, line := range lines {
-		if line.EntityPath == "$cbs" && line.Direction == "out" && line.BodyType == "Transfer" {
+		if line.EntityPath == "$cbs" && line.Direction == logging.DirectionOut && line.FrameType == frames.BodyTypeTransfer {
 			foundCBS = true
 
 			require.Equal(t, "put-token", line.MessageData.CBSData.ApplicationProperties["operation"])
 			require.Empty(t, line.MessageData.Message)
-			require.Empty(t, line.Body)
+			require.Empty(t, line.Frame.Body)
 		} else {
 			// sanity check that the other attributes are getting properly written
-			require.NotEmpty(t, line.Body)
+			require.NotEmpty(t, line.Frame.Body)
 			require.NotEmpty(t, line.Direction)
 		}
 
-		switch line.BodyType {
+		switch line.FrameType {
 		case frames.BodyTypeAttach:
 		case frames.BodyTypeDetach:
 		case frames.BodyTypeFlow:
@@ -58,8 +58,8 @@ func ValidateLog(t *testing.T, jsonlFile string) {
 			require.Empty(t, line.EntityPath)
 		}
 
-		require.NotEmpty(t, line.BodyType)
-		require.Empty(t, line.Raw, "Only filled out for RawFrames, not expected for this test")
+		require.NotEmpty(t, line.FrameType)
+		require.Empty(t, line.RawBody(), "Only filled out for RawFrames, not expected for this test")
 	}
 
 	require.True(t, foundCBS)
@@ -75,15 +75,22 @@ type logLine struct {
 	Receiver   *bool   `json:",omitempty"`
 	LinkName   *string `json:",omitempty"`
 
-	Body json.RawMessage
+	Frame struct {
+		Header frames.Header
+		Body   json.RawMessage
+		Raw    []byte
+	}
 
-	BodyType    frames.BodyType `json:",omitempty"`
+	FrameType frames.BodyType `json:",omitempty"`
+
 	MessageData struct {
 		logging.JSONMessageData
 		Message json.RawMessage
 	}
+}
 
-	Raw []byte // only shows up for frames that are created with [frames.NewRawFrame]
+func (ll logLine) RawBody() []byte {
+	return ll.Frame.Raw
 }
 
 func MustReadJSON(t *testing.T, path string) []logLine {

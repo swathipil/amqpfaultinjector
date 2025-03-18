@@ -45,14 +45,14 @@ func TestJSONLoggerTransformPutToken(t *testing.T) {
 		InputFrame     *frames.Frame
 		InputJSONFrame *JSONLine
 		ExpectedFrame  *frames.Frame
-		ExpectedExtra  any
+		ExpectedExtra  JSONMessageData
 	}{
 		{
 			"AttachSend",
 			&frames.Frame{Body: &frames.PerformAttach{}},
 			nil,
 			&frames.Frame{Body: &frames.PerformAttach{}},
-			nil,
+			JSONMessageData{},
 		},
 		{
 			"TransferSendAuth",
@@ -68,12 +68,14 @@ func TestJSONLoggerTransformPutToken(t *testing.T) {
 			}},
 			&JSONLine{EntityPath: "$cbs", Direction: "out"},
 			nil,
-			FilteredCBSData{
-				ApplicationProperties: map[string]any{
-					"expiration": "2025-01-17T19:56:03Z",
-					"name":       "sb://sb-testing.servicebus.windows.net/sb-testing-queue",
-					"operation":  "put-token",
-					"type":       "jwt",
+			JSONMessageData{
+				CBSData: &FilteredCBSData{
+					ApplicationProperties: map[string]any{
+						"expiration": "2025-01-17T19:56:03Z",
+						"name":       "sb://sb-testing.servicebus.windows.net/sb-testing-queue",
+						"operation":  "put-token",
+						"type":       "jwt",
+					},
 				},
 			},
 		},
@@ -82,10 +84,12 @@ func TestJSONLoggerTransformPutToken(t *testing.T) {
 			receivedFrame,
 			&JSONLine{EntityPath: "$cbs", Direction: "in"},
 			receivedFrame,
-			&models.Message{
-				ApplicationProperties: map[string]any{
-					"status-code":        int64(202),
-					"status-description": "Accepted",
+			JSONMessageData{
+				Message: &models.Message{
+					ApplicationProperties: map[string]any{
+						"status-code":        int64(202),
+						"status-description": "Accepted",
+					},
 				},
 			},
 		},
@@ -94,7 +98,9 @@ func TestJSONLoggerTransformPutToken(t *testing.T) {
 			peekSentFrame,
 			&JSONLine{EntityPath: "$management", Direction: "in"},
 			peekSentFrame,
-			peekMessage,
+			JSONMessageData{
+				Message: peekMessage,
+			},
 		},
 	}
 

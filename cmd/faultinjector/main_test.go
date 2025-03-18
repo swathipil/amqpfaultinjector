@@ -216,8 +216,8 @@ func TestFaultInjector_VerbatimPassthrough(t *testing.T) {
 	rawFrames := 0
 
 	for _, line := range testhelpers.MustReadJSON(t, testData.JSONLFile) {
-		if line.BodyType == frames.BodyTypeRawFrame {
-			require.NotEmpty(t, line.Raw)
+		if line.FrameType == frames.BodyTypeRawFrame {
+			require.NotEmpty(t, line.RawBody())
 			rawFrames++
 		}
 	}
