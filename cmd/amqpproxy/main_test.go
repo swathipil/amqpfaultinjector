@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"os"
-	"path"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -14,13 +14,16 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var testEnv = testhelpers.LoadEnv("../..")
+var testEnv testhelpers.TestEnv
 
 func TestMain(m *testing.M) {
+	testEnv = testhelpers.LoadEnv("../..")
 	os.Exit(m.Run())
 }
 
 func TestAMQPProxy(t *testing.T) {
+	testEnv.SkipIfNotLive(t)
+
 	testData := mustCreateAMQPProxy(t, []string{})
 
 	receiver, err := testData.ServiceBusClient.NewReceiverForQueue(testData.ServiceBusQueue, nil)
@@ -91,12 +94,13 @@ func mustCreateAMQPProxy(t *testing.T, args []string) *testAMQPProxy {
 	args = append(args,
 		cmd.Name(),
 		"--logs", dir,
+		"--cert", dir,
 		"--host", testEnv.ServiceBusEndpoint)
 
 	t.Logf("Command line args for fault injector: %#v", args)
 	cmd.SetArgs(args)
 
-	jsonlFile := path.Join(dir, "amqpproxy-traffic-1.json") // note, we're assuming this test only creates a single connection
+	jsonlFile := filepath.Join(dir, "amqpproxy-traffic-1.json") // note, we're assuming this test only creates a single connection
 
 	go func() {
 		t.Logf("Starting AMQP proxy command")

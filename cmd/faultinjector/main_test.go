@@ -5,7 +5,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -18,13 +18,16 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var testEnv = testhelpers.LoadEnv("../..")
+var testEnv testhelpers.TestEnv
 
 func TestMain(m *testing.M) {
+	testEnv = testhelpers.LoadEnv("../..")
 	os.Exit(m.Run())
 }
 
 func TestFaultInjector_Logging(t *testing.T) {
+	testEnv.SkipIfNotLive(t)
+
 	t.Run("Send", func(t *testing.T) {
 		testData := mustCreateFaultInjector(t, newPassthroughCommand, nil)
 
@@ -88,6 +91,8 @@ func TestFaultInjector_Logging(t *testing.T) {
 }
 
 func TestFaultInjector_DetachAfterTransfer(t *testing.T) {
+	testEnv.SkipIfNotLive(t)
+
 	testData := mustCreateFaultInjector(t, newDetachAfterTransferCommand, []string{"--times", "2"})
 
 	t.Run("sender", func(t *testing.T) {
@@ -115,6 +120,8 @@ func TestFaultInjector_DetachAfterTransfer(t *testing.T) {
 }
 
 func TestFaultInjector_DetachAfterDelay(t *testing.T) {
+	testEnv.SkipIfNotLive(t)
+
 	testData := mustCreateFaultInjector(t, newDetachAfterDelayCommand, nil)
 
 	{
@@ -138,6 +145,8 @@ func TestFaultInjector_DetachAfterDelay(t *testing.T) {
 }
 
 func TestFaultInjector_SlowTransferFrames(t *testing.T) {
+	testEnv.SkipIfNotLive(t)
+
 	testData := mustCreateFaultInjector(t, newSlowTransferFrames, nil)
 
 	{
@@ -177,6 +186,8 @@ func TestFaultInjector_SlowTransferFrames(t *testing.T) {
 }
 
 func TestFaultInjector_VerbatimPassthrough(t *testing.T) {
+	testEnv.SkipIfNotLive(t)
+
 	testData := mustCreateFaultInjector(t, func(ctx context.Context) *cobra.Command {
 		cmd := &cobra.Command{
 			Use: "verbatim_passthrough",
@@ -258,7 +269,8 @@ func mustCreateFaultInjector(t *testing.T, createCommand func(ctx context.Contex
 	args = append(args,
 		subCommand.Name(),
 		"--logs", dir,
-		"--host", testEnv.ServiceBusEndpoint)
+		"--host", testEnv.ServiceBusEndpoint,
+		"--cert", dir)
 
 	rootCmd := newRootCommand()
 	rootCmd.AddCommand(subCommand)
@@ -266,7 +278,7 @@ func mustCreateFaultInjector(t *testing.T, createCommand func(ctx context.Contex
 	t.Logf("Command line args for fault injector: %#v", args)
 	rootCmd.SetArgs(args)
 
-	jsonlFile := path.Join(dir, "faultinjector-traffic.json")
+	jsonlFile := filepath.Join(dir, "faultinjector-traffic.json")
 
 	go func() {
 		t.Logf("Starting fault injector command")

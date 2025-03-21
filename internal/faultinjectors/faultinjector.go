@@ -13,8 +13,8 @@ import (
 
 	"github.com/Azure/amqpfaultinjector/internal/logging"
 	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
+	"github.com/Azure/amqpfaultinjector/internal/shared"
 	"github.com/Azure/amqpfaultinjector/internal/utils"
-	"github.com/madflojo/testcerts"
 )
 
 // TODO: some more factoring to make the AMQPProxy and FaultInjector share a bit more code would be good.
@@ -35,6 +35,10 @@ type FaultInjectorOptions struct {
 	TLSKeyLogFile string
 	JSONLFile     string
 	AddressFile   string
+
+	// Folder where a certificate, for our TLS endpoint, is stored. If no certificate is present it is
+	// generated.
+	CertDir string
 }
 
 func NewFaultInjector(localEndpoint, remoteEndpoint string, injector MirrorCallback, options *FaultInjectorOptions) (*FaultInjector, error) {
@@ -114,17 +118,13 @@ func (fi *FaultInjector) ListenAndServe() error {
 
 	slog.Info("Listener started", "address", listener.Addr().String())
 
-	certFile, keyFile, err := testcerts.GenerateCertsToTempFile("")
+	certFile, keyFile, cert, err := shared.LoadOrCreateCert(fi.options.CertDir)
 
 	if err != nil {
 		return err
 	}
 
-	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
-
-	if err != nil {
-		return err
-	}
+	slog.Info("Certificate information:", "cert", certFile, "key", keyFile)
 
 	if fi.options.TLSKeyLogFile != "" {
 		tmpWriter, err := os.OpenFile(fi.options.TLSKeyLogFile, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)

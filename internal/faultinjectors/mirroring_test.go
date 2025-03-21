@@ -5,7 +5,7 @@ import (
 	"errors"
 	"io"
 	"os"
-	"path"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -150,7 +150,7 @@ func newFrameLoggerForTest(t *testing.T, prefix string) *logging.FrameLogger {
 
 	t.Cleanup(func() { os.RemoveAll(dir) })
 
-	jsonlFile := path.Join(dir, "mirror-traffic.json")
+	jsonlFile := filepath.Join(dir, "mirror-traffic.json")
 
 	fl, err := logging.NewFrameLogger(jsonlFile)
 	require.NoError(t, err)

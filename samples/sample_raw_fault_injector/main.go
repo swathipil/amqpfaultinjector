@@ -5,7 +5,7 @@ package main
 import (
 	"context"
 	"log/slog"
-	"path"
+	"path/filepath"
 
 	"github.com/Azure/amqpfaultinjector/internal/faultinjectors"
 	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
@@ -29,7 +29,7 @@ func main() {
 			injectorCallback,
 			&faultinjectors.FaultInjectorOptions{
 				// enable logging all traffic to a JSON file
-				JSONLFile: path.Join(*logs, "sample-rawfaultinjector-traffic.json"),
+				JSONLFile: filepath.Join(*logs, "sample-rawfaultinjector-traffic.json"),
 			})
 
 		if err != nil {

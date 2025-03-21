@@ -14,8 +14,8 @@ import (
 	"sync/atomic"
 
 	"github.com/Azure/amqpfaultinjector/internal/logging"
+	"github.com/Azure/amqpfaultinjector/internal/shared"
 	"github.com/Azure/amqpfaultinjector/internal/utils"
-	"github.com/madflojo/testcerts"
 )
 
 type AMQPProxy struct {
@@ -34,6 +34,10 @@ type AMQPProxyOptions struct {
 	BaseBinName string
 
 	TLSKeyLogFile string
+
+	// Folder where a certificate, for our TLS endpoint, is stored. If no certificate is present it is
+	// generated.
+	CertDir string
 
 	// DisableTLSForLocalEndpoint will disable TLS for the _local_ endpoint, while still using TLS
 	// when communicating with the remote host. This can be used an alternative to accepting self-signed
@@ -93,17 +97,13 @@ func (proxy *AMQPProxy) ListenAndServe() error {
 		return err
 	}
 
-	certFile, keyFile, err := testcerts.GenerateCertsToTempFile("")
+	certFile, keyFile, cert, err := shared.LoadOrCreateCert(proxy.options.CertDir)
 
 	if err != nil {
 		return err
 	}
 
-	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
-
-	if err != nil {
-		return err
-	}
+	slog.Info("Certificate information:", "cert", certFile, "key", keyFile)
 
 	var tlsKeyLogWriter io.Writer
 
