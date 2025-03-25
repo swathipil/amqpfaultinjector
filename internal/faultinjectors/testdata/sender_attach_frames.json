@@ -1,0 +1,112 @@
+{
+    "Time": "2025-03-25T22:10:12.149363508Z",
+    "Direction": "out",
+    "EntityPath": "testQueue",
+    "Connection": "-t5URcogTFGpEVnTbrnmOWXFLiuEXGnPLTzXcHUYyLW_Y_XQ8_kx3w",
+    "Receiver": false,
+    "LinkName": "4g4uScO28fBDofW4l0hDxZ-DB9Sm5gqbCP-nArrXOPqw1wLC_kiNTw",
+    "FrameType": "Attach",
+    "Frame": {
+        "Header": {
+            "Size": 113,
+            "DataOffset": 2,
+            "FrameType": 0,
+            "Channel": 300,
+            "Raw": "AAAAcQIAAMg="
+        },
+        "Body": {
+            "Name": "4g4uScO28fBDofW4l0hDxZ-DB9Sm5gqbCP-nArrXOPqw1wLC_kiNTw",
+            "Handle": 300,
+            "Role": false,
+            "SenderSettleMode": 2,
+            "ReceiverSettleMode": 0,
+            "Source": {
+                "Address": "",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "DistributionMode": "",
+                "Filter": null,
+                "DefaultOutcome": null,
+                "Outcomes": null,
+                "Capabilities": null
+            },
+            "Target": {
+                "Address": "testQueue",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "Capabilities": null
+            },
+            "Unsettled": null,
+            "IncompleteUnsettled": false,
+            "InitialDeliveryCount": 0,
+            "MaxMessageSize": 0,
+            "OfferedCapabilities": null,
+            "DesiredCapabilities": null,
+            "Properties": null
+        },
+        "BodyType": "Attach"
+    },
+    "MessageData": {}
+}
+{
+    "Time": "2025-03-25T22:10:12.224659368Z",
+    "Direction": "in",
+    "EntityPath": "testQueue",
+    "Connection": "-t5URcogTFGpEVnTbrnmOWXFLiuEXGnPLTzXcHUYyLW_Y_XQ8_kx3w",
+    "Receiver": false,
+    "LinkName": "4g4uScO28fBDofW4l0hDxZ-DB9Sm5gqbCP-nArrXOPqw1wLC_kiNTw",
+    "FrameType": "Attach",
+    "Frame": {
+        "Header": {
+            "Size": 131,
+            "DataOffset": 2,
+            "FrameType": 0,
+            "Channel": 1001,
+            "Raw": "AAAAgwIAAAA="
+        },
+        "Body": {
+            "Name": "4g4uScO28fBDofW4l0hDxZ-DB9Sm5gqbCP-nArrXOPqw1wLC_kiNTw",
+            "Handle": 1002,
+            "Role": true,
+            "SenderSettleMode": 2,
+            "ReceiverSettleMode": 0,
+            "Source": {
+                "Address": "",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "DistributionMode": "",
+                "Filter": null,
+                "DefaultOutcome": null,
+                "Outcomes": null,
+                "Capabilities": null
+            },
+            "Target": {
+                "Address": "testQueue",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "Capabilities": null
+            },
+            "Unsettled": null,
+            "IncompleteUnsettled": false,
+            "InitialDeliveryCount": 0,
+            "MaxMessageSize": 262144,
+            "OfferedCapabilities": null,
+            "DesiredCapabilities": null,
+            "Properties": null
+        },
+        "BodyType": "Attach"
+    },
+    "MessageData": {}
+}

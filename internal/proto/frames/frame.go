@@ -120,6 +120,8 @@ func (fr *Frame) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
+	fr.Header = tmpFrame.Header
+
 	switch tmpFrame.BodyType {
 	case BodyTypeEmptyFrame, BodyTypeRawFrame:
 		if err := unmarshalJSONBody[*EmptyFrame](tmpFrame.Body, &fr.Body); err != nil {

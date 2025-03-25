@@ -1,0 +1,112 @@
+{
+    "Time": "2025-03-25T23:23:11.568229362Z",
+    "Direction": "out",
+    "EntityPath": "$cbs",
+    "Connection": "XOjTuDIlHbiyNjhYvC4n6HRX5LDcnQbNZY-yPcDqhmI6_crPw-3wIg",
+    "Receiver": true,
+    "LinkName": "scPjxnC60D1wYKjf09ZTG-BC3Hw0pRyhu75cTqFR3_DREziclDU34w",
+    "FrameType": "Attach",
+    "Frame": {
+        "Header": {
+            "Size": 170,
+            "DataOffset": 2,
+            "FrameType": 0,
+            "Channel": 200,
+            "Raw": "AAAAqgIAAMg="
+        },
+        "Body": {
+            "Name": "scPjxnC60D1wYKjf09ZTG-BC3Hw0pRyhu75cTqFR3_DREziclDU34w",
+            "Handle": 201,
+            "Role": true,
+            "SenderSettleMode": 1,
+            "ReceiverSettleMode": 0,
+            "Source": {
+                "Address": "$cbs",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "DistributionMode": "",
+                "Filter": null,
+                "DefaultOutcome": null,
+                "Outcomes": null,
+                "Capabilities": null
+            },
+            "Target": {
+                "Address": "$cbs$$cbs-reply-to-0e0acb80-dfbc-4d82-576c-8e2b45553fce",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "Capabilities": null
+            },
+            "Unsettled": null,
+            "IncompleteUnsettled": false,
+            "InitialDeliveryCount": 0,
+            "MaxMessageSize": 0,
+            "OfferedCapabilities": null,
+            "DesiredCapabilities": null,
+            "Properties": null
+        },
+        "BodyType": "Attach"
+    },
+    "MessageData": {}
+}
+{
+    "Time": "2025-03-25T23:23:11.632961359Z",
+    "Direction": "in",
+    "EntityPath": "$cbs",
+    "Connection": "XOjTuDIlHbiyNjhYvC4n6HRX5LDcnQbNZY-yPcDqhmI6_crPw-3wIg",
+    "Receiver": true,
+    "LinkName": "scPjxnC60D1wYKjf09ZTG-BC3Hw0pRyhu75cTqFR3_DREziclDU34w",
+    "FrameType": "Attach",
+    "Frame": {
+        "Header": {
+            "Size": 183,
+            "DataOffset": 2,
+            "FrameType": 0,
+            "Channel": 0,
+            "Raw": "AAAAtwIAAAA="
+        },
+        "Body": {
+            "Name": "scPjxnC60D1wYKjf09ZTG-BC3Hw0pRyhu75cTqFR3_DREziclDU34w",
+            "Handle": 1,
+            "Role": false,
+            "SenderSettleMode": 1,
+            "ReceiverSettleMode": 0,
+            "Source": {
+                "Address": "$cbs",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "DistributionMode": "",
+                "Filter": null,
+                "DefaultOutcome": null,
+                "Outcomes": null,
+                "Capabilities": null
+            },
+            "Target": {
+                "Address": "$cbs$$cbs-reply-to-0e0acb80-dfbc-4d82-576c-8e2b45553fce",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "Capabilities": null
+            },
+            "Unsettled": null,
+            "IncompleteUnsettled": false,
+            "InitialDeliveryCount": 0,
+            "MaxMessageSize": 18446744073709551615,
+            "OfferedCapabilities": null,
+            "DesiredCapabilities": null,
+            "Properties": null
+        },
+        "BodyType": "Attach"
+    },
+    "MessageData": {}
+}

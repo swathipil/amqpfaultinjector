@@ -1,6 +1,8 @@
 package proto
 
 import (
+	"fmt"
+
 	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
 	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
 	"github.com/Azure/amqpfaultinjector/internal/utils"
@@ -33,14 +35,14 @@ func NewStateMap() *StateMap {
 }
 
 func (sm *StateMap) AddFrame(out bool, fr *frames.Frame) {
-	switch body := fr.Body.(type) {
+	switch fr.Body.(type) {
 	case *frames.PerformOpen:
-		sm.SetOpenFrame(out, newStateFrame(fr, body))
+		sm.SetOpenFrame(out, NewStateFrame[*frames.PerformOpen](fr))
 	case *frames.PerformAttach:
 		if out {
-			sm.outboundAttach(newStateFrame(fr, body))
+			sm.outboundAttach(NewStateFrame[*frames.PerformAttach](fr))
 		} else {
-			sm.incomingAttach(newStateFrame(fr, body))
+			sm.incomingAttach(NewStateFrame[*frames.PerformAttach](fr))
 		}
 	}
 }
@@ -131,11 +133,16 @@ type linkAndRole struct {
 	LinkName string
 }
 
-type StateFrame[T any] struct {
+type StateFrame[T frames.Body] struct {
 	*frames.Frame
 	Body T
 }
 
-func newStateFrame[T any](fr *frames.Frame, body T) *StateFrame[T] {
-	return &StateFrame[T]{Frame: fr, Body: body}
+func NewStateFrame[T frames.Body](fr *frames.Frame) *StateFrame[T] {
+	if body, ok := fr.Body.(T); !ok {
+		var zeroT T
+		panic(fmt.Errorf("invalid state frame type - expected %T, got %T", zeroT, fr.Body))
+	} else {
+		return &StateFrame[T]{Frame: fr, Body: body}
+	}
 }

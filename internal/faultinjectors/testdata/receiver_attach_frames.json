@@ -1,0 +1,114 @@
+{
+    "Time": "2025-03-25T22:15:27.924337484Z",
+    "Direction": "out",
+    "EntityPath": "testQueue",
+    "Connection": "Wm-b7sudBeNuNoauG6lZnGFp3VrDLMe7vkoKfpnfdZR5KcMw8auMaw",
+    "Receiver": true,
+    "LinkName": "cbKudBAb6EPal6WAOu2bCpqEi_0nKYCTiy0Hmv2t3UC6nsp1u107aQ",
+    "FrameType": "Attach",
+    "Frame": {
+        "Header": {
+            "Size": 109,
+            "DataOffset": 2,
+            "FrameType": 0,
+            "Channel": 200,
+            "Raw": "AAAAbQIAAMg="
+        },
+        "Body": {
+            "Name": "cbKudBAb6EPal6WAOu2bCpqEi_0nKYCTiy0Hmv2t3UC6nsp1u107aQ",
+            "Handle": 200,
+            "Role": true,
+            "SenderSettleMode": null,
+            "ReceiverSettleMode": 1,
+            "Source": {
+                "Address": "testQueue",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "DistributionMode": "",
+                "Filter": null,
+                "DefaultOutcome": null,
+                "Outcomes": null,
+                "Capabilities": null
+            },
+            "Target": {
+                "Address": "",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "Capabilities": null
+            },
+            "Unsettled": null,
+            "IncompleteUnsettled": false,
+            "InitialDeliveryCount": 0,
+            "MaxMessageSize": 0,
+            "OfferedCapabilities": null,
+            "DesiredCapabilities": null,
+            "Properties": null
+        },
+        "BodyType": "Attach"
+    },
+    "MessageData": {}
+}
+{
+    "Time": "2025-03-25T22:15:27.99300758Z",
+    "Direction": "in",
+    "EntityPath": "testQueue",
+    "Connection": "Wm-b7sudBeNuNoauG6lZnGFp3VrDLMe7vkoKfpnfdZR5KcMw8auMaw",
+    "Receiver": true,
+    "LinkName": "cbKudBAb6EPal6WAOu2bCpqEi_0nKYCTiy0Hmv2t3UC6nsp1u107aQ",
+    "FrameType": "Attach",
+    "Frame": {
+        "Header": {
+            "Size": 143,
+            "DataOffset": 2,
+            "FrameType": 0,
+            "Channel": 0,
+            "Raw": "AAAAjwIAAAA="
+        },
+        "Body": {
+            "Name": "cbKudBAb6EPal6WAOu2bCpqEi_0nKYCTiy0Hmv2t3UC6nsp1u107aQ",
+            "Handle": 0,
+            "Role": false,
+            "SenderSettleMode": 0,
+            "ReceiverSettleMode": 1,
+            "Source": {
+                "Address": "testQueue",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "DistributionMode": "",
+                "Filter": null,
+                "DefaultOutcome": null,
+                "Outcomes": null,
+                "Capabilities": null
+            },
+            "Target": {
+                "Address": "",
+                "Durable": 0,
+                "ExpiryPolicy": "session-end",
+                "Timeout": 0,
+                "Dynamic": false,
+                "DynamicNodeProperties": null,
+                "Capabilities": null
+            },
+            "Unsettled": null,
+            "IncompleteUnsettled": false,
+            "InitialDeliveryCount": 0,
+            "MaxMessageSize": 18446744073709551615,
+            "OfferedCapabilities": [
+                "SHARED-SUBS"
+            ],
+            "DesiredCapabilities": null,
+            "Properties": null
+        },
+        "BodyType": "Attach"
+    },
+    "MessageData": {}
+}
