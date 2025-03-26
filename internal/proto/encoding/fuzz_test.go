@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Azure/amqpfaultinjector/internal/proto/buffer"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/buffer"
 )
 
 func fuzzUnmarshal(data []byte) int {

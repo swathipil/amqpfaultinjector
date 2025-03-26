@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Azure/amqpfaultinjector/internal/logging"
-	"github.com/Azure/amqpfaultinjector/internal/proto"
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/logging"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
 )
 
 type MirrorParams struct {

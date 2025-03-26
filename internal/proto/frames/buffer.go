@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/Azure/amqpfaultinjector/internal/proto/buffer"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/buffer"
 )
 
 type Buffer struct {

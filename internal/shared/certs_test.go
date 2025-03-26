@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Azure/amqpfaultinjector/internal/shared"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/shared"
 	"github.com/stretchr/testify/require"
 )
 

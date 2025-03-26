@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/Azure/amqpfaultinjector/internal/logging"
-	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
-	"github.com/Azure/amqpfaultinjector/internal/utils"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/logging"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/encoding"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/utils"
 )
 
 // NewDetachAfterDelayInjector returns a callback that automatically causes links to be DETACH'd 2

@@ -5,7 +5,7 @@ import (
 	"io"
 	"iter"
 
-	"github.com/Azure/amqpfaultinjector/internal/utils"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/utils"
 )
 
 // ConnReadWriter makes it simple to write or read from a stream with frames or AMQP

@@ -4,9 +4,9 @@ import (
 	"context"
 	"sync/atomic"
 
-	"github.com/Azure/amqpfaultinjector/internal/logging"
-	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/logging"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/encoding"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
 )
 
 // NewDetachAfterTransferInjector creates an injector that detaches an AMQP sender after a set number of

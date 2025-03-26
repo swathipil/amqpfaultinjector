@@ -7,8 +7,8 @@ import (
 	"iter"
 	"testing"
 
-	"github.com/Azure/amqpfaultinjector/internal/mocks"
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/mocks"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )

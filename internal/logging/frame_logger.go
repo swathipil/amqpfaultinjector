@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/Azure/amqpfaultinjector/internal/proto"
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
 )
 
 // NewFrameLogger creates a FrameLogger instance.

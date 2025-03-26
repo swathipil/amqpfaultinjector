@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/Azure/amqpfaultinjector/internal/proto"
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
-	"github.com/Azure/amqpfaultinjector/internal/proto/models"
-	"github.com/Azure/amqpfaultinjector/internal/utils"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/models"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/utils"
 )
 
 // NewJSONLogger creates a JSONLogger instance.

@@ -1,4 +1,4 @@
-package amqpfaultinjector
+package amqpproxy
 
 import (
 	"context"
@@ -13,9 +13,9 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/Azure/amqpfaultinjector/internal/logging"
-	"github.com/Azure/amqpfaultinjector/internal/shared"
-	"github.com/Azure/amqpfaultinjector/internal/utils"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/logging"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/shared"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/utils"
 )
 
 type AMQPProxy struct {

@@ -4,9 +4,9 @@ import (
 	"context"
 	"path/filepath"
 
-	"github.com/Azure/amqpfaultinjector"
-	"github.com/Azure/amqpfaultinjector/cmd/internal"
-	"github.com/Azure/amqpfaultinjector/internal/logging"
+	"github.com/richardpark-msft/amqpfaultinjector/cmd/internal"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/amqpproxy"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/logging"
 	"github.com/spf13/cobra"
 )
 
@@ -46,10 +46,10 @@ func newAMQPProxyCommand(ctx context.Context) *cobra.Command {
 			baseBinName = filepath.Join(cf.LogsDir, "amqpproxy-bin")
 		}
 
-		fi, err := amqpfaultinjector.NewAMQPProxy(
+		fi, err := amqpproxy.NewAMQPProxy(
 			"localhost:5671",
 			cf.Host,
-			&amqpfaultinjector.AMQPProxyOptions{
+			&amqpproxy.AMQPProxyOptions{
 				BaseJSONName:               filepath.Join(cf.LogsDir, "amqpproxy-traffic"),
 				TLSKeyLogFile:              filepath.Join(cf.LogsDir, "amqpproxy-tlskeys.txt"),
 				BaseBinName:                baseBinName,

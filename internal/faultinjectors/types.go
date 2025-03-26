@@ -3,7 +3,7 @@ package faultinjectors
 import (
 	"time"
 
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
 )
 
 type MetaFrameAction string

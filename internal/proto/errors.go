@@ -1,7 +1,7 @@
 package proto
 
 import (
-	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/encoding"
 )
 
 // ErrCond is an AMQP defined error condition.

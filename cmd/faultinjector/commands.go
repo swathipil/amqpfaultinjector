@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/Azure/amqpfaultinjector/cmd/internal"
-	"github.com/Azure/amqpfaultinjector/internal/faultinjectors"
-	"github.com/Azure/amqpfaultinjector/internal/logging"
-	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
+	"github.com/richardpark-msft/amqpfaultinjector/cmd/internal"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/faultinjectors"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/logging"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/encoding"
 	"github.com/spf13/cobra"
 )
 

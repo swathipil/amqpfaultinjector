@@ -11,10 +11,10 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/Azure/amqpfaultinjector/internal/logging"
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
-	"github.com/Azure/amqpfaultinjector/internal/shared"
-	"github.com/Azure/amqpfaultinjector/internal/utils"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/logging"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/shared"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/utils"
 )
 
 // TODO: some more factoring to make the AMQPProxy and FaultInjector share a bit more code would be good.

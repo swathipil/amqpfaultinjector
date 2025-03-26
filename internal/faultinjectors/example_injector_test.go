@@ -3,8 +3,8 @@ package faultinjectors
 import (
 	"context"
 
-	"github.com/Azure/amqpfaultinjector/internal/logging"
-	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/logging"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/encoding"
 )
 
 func NewExampleInjector(exampleValue int) *ExampleInjector {

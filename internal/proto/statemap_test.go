@@ -3,8 +3,8 @@ package proto
 import (
 	"testing"
 
-	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/encoding"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
 	"github.com/stretchr/testify/require"
 )
 

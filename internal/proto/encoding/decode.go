@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/Azure/amqpfaultinjector/internal/proto/buffer"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/buffer"
 )
 
 // unmarshaler is fulfilled by types that can unmarshal

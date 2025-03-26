@@ -3,9 +3,9 @@ package proto
 import (
 	"fmt"
 
-	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
-	"github.com/Azure/amqpfaultinjector/internal/utils"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/encoding"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/utils"
 )
 
 type StateMap struct {

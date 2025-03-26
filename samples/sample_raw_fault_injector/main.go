@@ -7,9 +7,9 @@ import (
 	"log/slog"
 	"path/filepath"
 
-	"github.com/Azure/amqpfaultinjector/internal/faultinjectors"
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
-	"github.com/Azure/amqpfaultinjector/internal/utils"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/faultinjectors"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/utils"
 	"github.com/spf13/cobra"
 )
 

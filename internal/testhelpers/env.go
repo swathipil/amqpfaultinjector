@@ -21,7 +21,9 @@ func (te TestEnv) SkipIfNotLive(t *testing.T) {
 	}
 }
 
-func LoadEnv(dir string) TestEnv {
+func InitLiveTests(dir string) TestEnv {
+	slog.SetLogLoggerLevel(slog.LevelDebug)
+
 	envs := []string{path.Join(dir, ".env")}
 
 	if err := godotenv.Load(envs...); err != nil {

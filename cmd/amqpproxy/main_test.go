@@ -8,16 +8,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Azure/amqpfaultinjector/internal/testhelpers"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/messaging/azservicebus"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/testhelpers"
 	"github.com/stretchr/testify/require"
 )
 
 var testEnv testhelpers.TestEnv
 
 func TestMain(m *testing.M) {
-	testEnv = testhelpers.LoadEnv("../..")
+	testEnv = testhelpers.InitLiveTests("../..")
 	os.Exit(m.Run())
 }
 

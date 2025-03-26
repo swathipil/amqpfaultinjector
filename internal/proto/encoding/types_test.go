@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/Azure/amqpfaultinjector/internal/proto/buffer"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/buffer"
 	"github.com/stretchr/testify/require"
 )
 

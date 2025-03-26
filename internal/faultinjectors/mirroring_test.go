@@ -11,12 +11,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Azure/amqpfaultinjector/internal/logging"
-	"github.com/Azure/amqpfaultinjector/internal/proto"
-	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
-	"github.com/Azure/amqpfaultinjector/internal/proto/frames"
-	"github.com/Azure/amqpfaultinjector/internal/utils"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/logging"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/encoding"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/frames"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/utils"
 	"github.com/stretchr/testify/require"
 )
 

@@ -12,8 +12,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/Azure/amqpfaultinjector/internal/proto/buffer"
-	"github.com/Azure/amqpfaultinjector/internal/utils"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/buffer"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/utils"
 )
 
 type AMQPType uint8

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Azure/amqpfaultinjector/internal/proto/buffer"
-	"github.com/Azure/amqpfaultinjector/internal/proto/encoding"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/buffer"
+	"github.com/richardpark-msft/amqpfaultinjector/internal/proto/encoding"
 )
 
 const HeaderSize = 8
