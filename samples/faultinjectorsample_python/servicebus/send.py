@@ -28,8 +28,8 @@ logger.addHandler(handler)
 
 find_dotenv()
 load_dotenv()
-FULLY_QUALIFIED_NAMESPACE = os.environ["SERVICEBUS_FULLY_QUALIFIED_NAMESPACE"]
-QUEUE_NAME = os.environ["SERVICEBUS_QUEUE_NAME"]
+FULLY_QUALIFIED_NAMESPACE = os.environ["SERVICEBUS_ENDPOINT"]
+QUEUE_NAME = os.environ["SERVICEBUS_QUEUE"]
 
 print(f"Connecting to {FULLY_QUALIFIED_NAMESPACE}, using queue {QUEUE_NAME}")
 
@@ -41,6 +41,15 @@ CUSTOM_ENDPOINT_ADDRESS = "sb://localhost:5671"
 context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
 context.check_hostname = False
 context.verify_mode = ssl.CERT_NONE
+
+def send_single_message(sender):
+    message = ServiceBusMessage("Single Message")
+    sender.send_messages(message)
+
+def send_large_messages(sender):
+    for _ in range(200):
+        message = "A" * 1024 * 600 # 600 KB
+        sender.send_messages(ServiceBusMessage(message))
 
 credential = DefaultAzureCredential()
 servicebus_client = ServiceBusClient(
@@ -54,7 +63,8 @@ servicebus_client = ServiceBusClient(
 with servicebus_client:
     sender = servicebus_client.get_queue_sender(queue_name=QUEUE_NAME)
     with sender:
-        message = ServiceBusMessage("Single Message")
-        sender.send_messages(message)
+        send_single_message(sender)
+        # Namespace should be premium to send messages > 256 KB
+        # send_large_messages(sender)
 
 print('Finished sending.')

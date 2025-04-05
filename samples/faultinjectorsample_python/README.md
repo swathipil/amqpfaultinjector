@@ -64,8 +64,8 @@ Find more samples [here](https://github.com/Azure/azure-sdk-for-python/tree/main
 
 2. Add the following to a `.env` file:
 ```
-SERVICEBUS_FULLY_QUALIFIED_NAMESPACE=<your-sb-namespace>.servicebus.windows.net
-SERVICEBUS_QUEUE_NAME=<your-queue-name>
+SERVICEBUS_ENDPOINT=<your-sb-namespace>.servicebus.windows.net
+SERVICEBUS_QUEUE=<your-queue-name>
 EVENT_HUB_HOSTNAME=<your-eh-namespace>.servicebus.windows.net
 EVENT_HUB_NAME=<your-hub>
 ```

@@ -141,6 +141,19 @@ func newSlowTransferFrames(ctx context.Context) *cobra.Command {
 	return cmd
 }
 
+func newMultiTransferInjector(ctx context.Context) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "multi_transfer",
+		Short: "Splits any incoming TRANSFER frames into many TRANSFER frames",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			injector := faultinjectors.NewMultiTransferInjector()
+			return runFaultInjector(ctx, cmd, injector.Callback)
+		},
+	}
+
+	return cmd
+}
+
 // newPassthroughCommand creates a command that passes all frames through, unchanged. Useful if trying to troubleshoot.
 func newPassthroughCommand(ctx context.Context) *cobra.Command {
 	cmd := &cobra.Command{

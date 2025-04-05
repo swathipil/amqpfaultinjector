@@ -10,7 +10,6 @@ from dotenv import find_dotenv, load_dotenv
 import ssl
 from azure.servicebus import ServiceBusClient, TransportType
 from azure.identity import DefaultAzureCredential
-from datetime import datetime
 
 
 import logging
@@ -24,8 +23,8 @@ logger.addHandler(handler)
 
 find_dotenv()
 load_dotenv()
-FULLY_QUALIFIED_NAMESPACE = os.environ["SERVICEBUS_FULLY_QUALIFIED_NAMESPACE"]
-QUEUE_NAME = os.environ["SERVICEBUS_QUEUE_NAME"]
+FULLY_QUALIFIED_NAMESPACE = os.environ["SERVICEBUS_ENDPOINT"]
+QUEUE_NAME = os.environ["SERVICEBUS_QUEUE"]
 # The custom endpoint address to use for establishing a connection to the Service Bus service,
 # allowing network requests to be routed through any application gateways
 # or other paths needed for the host environment.
@@ -48,8 +47,9 @@ with servicebus_client:
 
     receiver = servicebus_client.get_queue_receiver(queue_name=QUEUE_NAME)
     with receiver:
-        received_msgs = receiver.receive_messages(max_message_count=1, max_wait_time=5)
+        received_msgs = receiver.receive_messages(max_message_count=1)
         print('Received messages.')
         for msg in received_msgs:
+            print(msg)
             receiver.complete_message(msg)
         print('Completed messages.')

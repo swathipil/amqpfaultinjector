@@ -14,6 +14,7 @@ func main() {
 
 	// transfer commands
 	rootCmd.AddCommand(newSlowTransferFrames(context.Background()))
+	rootCmd.AddCommand(newMultiTransferInjector(context.Background()))
 
 	// passthrough/diagnostics
 	rootCmd.AddCommand(newPassthroughCommand(context.Background()))
