@@ -721,16 +721,16 @@ func (a *PerformAttach) GetHandle() *uint32 { return &a.Handle }
 // Entity returns the underlying target or source for this ATTACH frame.
 func (a *PerformAttach) Address(out bool) (address string) {
 	switch {
-	case out && a.Role == encoding.RoleSender:
+	case out && a.Role == encoding.RoleSender && a.Target != nil:
 		return a.Target.Address
-	case out && a.Role == encoding.RoleReceiver:
+	case out && a.Role == encoding.RoleReceiver && a.Source != nil:
 		return a.Source.Address
 
 	// NOTE: the source and target are reversed when the ATTACH frames
-	// are incoming.
-	case !out && a.Role == encoding.RoleSender:
+	// are incoming since the roles are also reversed.
+	case !out && a.Role == encoding.RoleSender && a.Source != nil:
 		return a.Source.Address
-	case !out && a.Role == encoding.RoleReceiver:
+	case !out && a.Role == encoding.RoleReceiver && a.Target != nil:
 		return a.Target.Address
 	default:
 		return ""
