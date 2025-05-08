@@ -50,7 +50,7 @@ func newAMQPProxyCommand(ctx context.Context) *cobra.Command {
 			"localhost:5671",
 			cf.Host,
 			&amqpproxy.AMQPProxyOptions{
-				BaseJSONName:               filepath.Join(cf.LogsDir, "amqpproxy-traffic"),
+				BaseJSONName:               filepath.Join(cf.LogsDir, cf.LogsFile),
 				TLSKeyLogFile:              filepath.Join(cf.LogsDir, "amqpproxy-tlskeys.txt"),
 				BaseBinName:                baseBinName,
 				DisableTLSForLocalEndpoint: *disableTLS,
